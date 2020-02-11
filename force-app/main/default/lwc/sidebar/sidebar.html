@@ -1,0 +1,34 @@
+<template>
+  <div style="width: 320px; background: #ffffff;">
+    <lightning-vertical-navigation selected-item="batch_jobs">
+      <lightning-vertical-navigation-section label="Batch Jobs Management">
+        <lightning-vertical-navigation-item
+          label="Batch Jobs"
+          name="batch_jobs"
+        ></lightning-vertical-navigation-item>
+        <lightning-vertical-navigation-item
+          label="Failed Records"
+          name="failed_records"
+        ></lightning-vertical-navigation-item>
+        <lightning-vertical-navigation-item
+          label="Tenants"
+          name="tenants"
+        ></lightning-vertical-navigation-item>
+        <lightning-vertical-navigation-item
+          label="Users"
+          name="users"
+        ></lightning-vertical-navigation-item>
+      </lightning-vertical-navigation-section>
+      <lightning-vertical-navigation-section label="Graphs/Visualizations">
+        <lightning-vertical-navigation-item
+          label="Records"
+          name="graph_records"
+        ></lightning-vertical-navigation-item>
+        <lightning-vertical-navigation-item
+          label="Batch Record Size"
+          name="graph_record_size"
+        ></lightning-vertical-navigation-item>
+      </lightning-vertical-navigation-section>
+    </lightning-vertical-navigation>
+  </div>
+</template>

@@ -1,0 +1,40 @@
+<template>
+  <lightning-card title="Users">
+    <div class="slds-m-around_medium">
+      <div class="slds-p-horizontal_medium">
+        <lightning-button
+          label="+"
+          variant="brand"
+          onclick={openmodal}
+        ></lightning-button>
+      </div>
+      <br />
+      <div>
+        <lightning-datatable
+          key-field="id"
+          data={data}
+          columns={columns}
+          onrowaction={handleRowAction}
+        >
+        </lightning-datatable>
+      </div>
+    </div>
+    
+    <template if:true={openmodel}>
+      <c-user-form
+        is-edit={isEdit}
+        current-user={currentUser}
+        onclose={closeModal}
+        onsave={saveUser}
+      ></c-user-form>
+    </template>
+
+    <c-confirmation-modal 
+     openconfirmation={openconfirmation}
+     onclosemodal={closeModal}
+     oncloseconfirmation={closeConfirmation}
+     ondelete={handleDelete}
+     ></c-confirmation-modal>
+     
+  </lightning-card>
+</template>

@@ -1,0 +1,157 @@
+<template>
+  <div class="demo-only" style="height: 640px;">
+    <section
+      role="dialog"
+      tabindex="-1"
+      aria-labelledby="modal-heading-01"
+      aria-modal="true"
+      aria-describedby="modal-content-id-1"
+      class="slds-modal slds-fade-in-open"
+    >
+      <div class="slds-modal__container">
+        <header class="slds-modal__header">
+          <button
+            class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+            title="Close"
+            onclick={close}
+          >
+            <lightning-icon icon-name="utility:close" size="medium">
+            </lightning-icon>
+            <span class="slds-assistive-text">Close</span>
+          </button>
+          <h2
+            id="modal-heading-01"
+            class="slds-text-heading_medium slds-hyphenate"
+          >
+            {title}
+          </h2>
+        </header>
+        <div
+          class="slds-modal__content slds-p-around_medium"
+          id="modal-content-id-1"
+        >
+          <lightning-card title="Batch job">
+            <lightning-input
+              label="Name"
+              placeholder="Name"
+              class="name"
+              value={currentDefinition.name}
+              required
+            ></lightning-input>
+
+            <lightning-input
+              label="Description"
+              placeholder="Description"
+              class="description"
+              type="text"
+              value={currentDefinition.description}
+              required
+            ></lightning-input>
+
+            <lightning-combobox
+              name="progress"
+              label="Tenant"
+              value={value}
+              placeholder="Select Tenant"
+              options={tenants}
+              onchange={handleChange}
+              required
+            ></lightning-combobox>
+
+            <lightning-input
+              label="Sleep interval"
+              type="number"
+              value={currentDefinition.sleepInterval}
+              class="sleepInterval"
+              required
+            ></lightning-input>
+
+            <lightning-input
+              label="TTL"
+              type="number"
+              value={currentDefinition.ttl}
+              class="ttl"
+              required
+            ></lightning-input>
+          </lightning-card>
+
+          <lightning-card title="Source">
+            <lightning-combobox
+              name="progress"
+              label="Type"
+              value={sourceType}
+              placeholder="Select Source Type"
+              options={types}
+              onchange={handleSourceType}
+              required
+            ></lightning-combobox>
+
+            <lightning-input
+              label="Address"
+              class="sourceAddress"
+              value={currentDefinition.sourceAddress}
+              required
+            ></lightning-input>
+
+          </lightning-card>
+
+          <lightning-card title="Destination">
+            <lightning-combobox
+            name="progress"
+            label="Type"
+            value={destinationType}
+            placeholder="Select Destination Type"
+            options={types}
+            onchange={handleDestinationType}
+            required
+          ></lightning-combobox>
+
+          <lightning-input
+            label="Address"
+            class="destinationAddress"
+            value={currentDefinition.destinationAddress}
+            required
+          ></lightning-input>
+
+          </lightning-card>
+
+        </div>
+
+        <footer class="slds-modal__footer">
+          <lightning-button
+            label="Cancel"
+            variant="neutral"
+            onclick={close}
+          ></lightning-button
+          >&nbsp;&nbsp;&nbsp;&nbsp;
+          <lightning-button
+            label="Save"
+            type="submit"
+            variant="brand"
+            onclick={save}
+          ></lightning-button>
+        </footer>
+      </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+  </div>
+</template>
+
+<!--
+    <template if:true={changePassword}>
+              <lightning-input
+              label="New password"
+              placeholder="Password"
+              class="password"
+              value={currentUser.password}
+              required
+            ></lightning-input>
+            <lightning-input
+                label="Confirm password"
+                placeholder="Password"
+                class="password"
+                value={currentUser.password}
+                required
+              ></lightning-input>
+            </template>
+  -->

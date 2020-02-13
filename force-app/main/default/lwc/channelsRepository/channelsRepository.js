@@ -11,7 +11,7 @@ const resource = "/messaging";
 export default {
   async get() {
     try {
-      const { data } = await Repository.get(`${resource}/types`);
+      const data = await Repository.get(`${resource}/types`);
       return data;
     } catch (error) {
       throw ErrorHandler.message(error);
@@ -19,7 +19,7 @@ export default {
   },
   async getTypes() {
     try {
-      const { data } = await Repository.get(`${resource}/types`);
+      const data = await Repository.get(`${resource}/types`);
       return data;
     } catch (error) {
       throw ErrorHandler.message(error);
@@ -27,7 +27,7 @@ export default {
   },
   async getChannel(id) {
     try {
-      const { data } = await Repository.get(`${resource}/${id}`);
+      const data = await Repository.get(`${resource}/${id}`);
       return new Channel(data);
     } catch (error) {
       throw ErrorHandler.message(error);
@@ -36,7 +36,7 @@ export default {
 
   async createChannel(payload) {
     try {
-      const { data } = await Repository.post(`${resource}`, payload);
+      const data = await Repository.post(`${resource}`, payload);
       return new Channel(data);
     } catch (error) {
       throw ErrorHandler.message(error);

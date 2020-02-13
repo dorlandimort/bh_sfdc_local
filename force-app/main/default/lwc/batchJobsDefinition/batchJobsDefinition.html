@@ -1,5 +1,5 @@
 <template>
-  <lightning-card title="Tenants">
+  <lightning-card title="Batch Jobs Definition">
     <div class="slds-m-around_medium">
       <div class="slds-p-horizontal_medium">
         <lightning-button
@@ -18,14 +18,21 @@
         >
         </lightning-datatable>
       </div>
+      <c-paginator
+        page-model={pageModel}
+        page-size={pageSize}
+        page-number={pageNumber}
+        onpageclick={onPageClick}
+      ></c-paginator>
     </div>
 
     <template if:true={openmodel}>
-      <c-tenant-form
-        current-tenant={currentTenant}
+      <c-definitions-form
+        is-edit={isEdit}
+        current-definition={currentDefinition}
         onclose={closeModal}
-        onsave={saveMethod}
-      ></c-tenant-form>
+        onsave={saveDefinition}
+      ></c-definitions-form>
     </template>
 
     <c-confirmation-modal

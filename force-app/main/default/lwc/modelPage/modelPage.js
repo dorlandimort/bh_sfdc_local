@@ -11,4 +11,9 @@ export default class ModelPage {
     this.hasPrevious = properties["hasPrevious"] || false;
     this.hasNext = properties["hasNext"] | false;
   }
+
+  asJSON(){
+    
+  }
+
 }

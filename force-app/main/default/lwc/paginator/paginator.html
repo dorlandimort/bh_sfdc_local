@@ -3,6 +3,7 @@
     <lightning-layout-item>
       <lightning-button
         label="First Page"
+        class="FirstPage"
         icon-name="utility:chevronleft"
         onclick={FirstPageHandler1}
       ></lightning-button>
@@ -15,6 +16,25 @@
         onclick={previousHandler1}
       ></lightning-button>
     </lightning-layout-item>
+
+    <lightning-layout-item>
+      <div class="slds-align_absolute-center">
+        <ul class="slds-button-group-row">
+          <template for:each={pagesList} for:item="pageNumber">
+            <li class="slds-button-group-item" key={pageNumber}>
+              <button
+                data-id={pageNumber}
+                class="slds-button slds-button_neutral"
+                onclick={onPageClick}
+              >
+                {pageNumber}
+              </button>
+            </li>
+          </template>
+        </ul>
+      </div>
+    </lightning-layout-item>
+
     <lightning-layout-item>
       <lightning-button
         label="Next"
@@ -24,10 +44,11 @@
         onclick={nextHandler1}
       ></lightning-button>
     </lightning-layout-item>
-    <lightning-layout-item flexibility="grow"></lightning-layout-item>
+    <lightning-layout-item></lightning-layout-item>
     <lightning-layout-item>
       <lightning-button
         label="Last Page"
+        class="LastPage"
         icon-name="utility:chevronright"
         icon-position="right"
         onclick={LastPageHandler1}

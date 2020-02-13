@@ -8,7 +8,7 @@ const resource = "/definitions";
 export default {
   async get() {
     try {
-      const { data } = await Repository.get(`${resource}`);
+      const data = await Repository.get(`${resource}`);
       return data.map(definitionData => new Definition(definitionData));
     } catch (error) {
       throw ErrorHandler.message(error);

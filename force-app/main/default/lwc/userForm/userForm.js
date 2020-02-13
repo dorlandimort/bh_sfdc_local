@@ -15,7 +15,7 @@ export default class UserForm extends LightningElement {
   }
 
   async fetchData() {
-    this.title = this.isEdit ? "Editar usuario" : "Crear usuario";
+    this.title = this.isEdit ? "Edit user" : "Create user";
     // get tenants
     let tenants = await tenantsRepository.get();
     this.options = tenants.map(tenant => {

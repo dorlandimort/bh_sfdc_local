@@ -1,27 +1,28 @@
 import { LightningElement, track, api } from "lwc";
+import definitionsRepository from "c/definitionsRepository";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
-import usersRepository from "c/usersRepository";
+import PagedRequestData from "c/pagedRequestData";
 
 const columns = [
-  { label: "Display name", fieldName: "displayName" },
-  { label: "E-mail address", fieldName: "emailAddress" },
+  { label: "Name", fieldName: "name", sortable: true },
+  { label: "Description", fieldName: "description", sortable: true },
+  { label: "Source", fieldName: "formattedSourceAddress", sortable: true },
   {
-    label: "Change password",
-    type: "button",
-    initialWidth: 150,
-    typeAttributes: {
-      label: { fieldName: "actionLabel" },
-      title: "Click to Change password",
-      name: "change-password",
-      iconName: "utility:edit",
-      disabled: { fieldName: "actionDisabled" },
-      class: "btn_next"
-    }
+    label: "Destination",
+    fieldName: "formattedDestinationAddress",
+    sortable: true
   },
+  {
+    label: "Sleep interval",
+    fieldName: "sleepInterval",
+    type: "number",
+    sortable: true
+  },
+  { label: "TTL", fieldName: "ttl", type: "number", sortable: true },
   {
     label: "Edit",
     type: "button",
-    initialWidth: 150,
+    initialWidth: 100,
     typeAttributes: {
       label: { fieldName: "actionLabel" },
       title: "Click to Edit",
@@ -46,55 +47,69 @@ const columns = [
   }
 ];
 
-export default class Users extends LightningElement {
-  @api openconfirmation = false;
-  @api currentUser = {
-    id: 0,
-    displayName: ""
-  };
-  @api isEdit = false;
-
+export default class BatchJobsDefinition extends LightningElement {
   @track data = [];
-  columns = columns;
+  @api currentDefinition = {};
   @track openmodel = false;
-  @track deleteId = 0;
-  @track totalElements = 0;
+  @api isEdit = false;
+  @api openconfirmation = false;
+
+  @api pageNumber = 1;
+  @api pageSize = 5;
+  @track pagedRequestData;
+  @track totalItems;
+  @api pageModel;
+  // @api pagesList = [];
+
+  columns = columns;
 
   async connectedCallback() {
+    this.pagedRequestData = new PagedRequestData({
+      pageNumber: this.pageNumber - 1,
+      pageSize: this.pageSize
+    });
     await this.fetchData();
   }
 
   async fetchData() {
     try {
-      const data = await usersRepository.get();
-      this.data = data;
+      /*
+        pageNumber: pageNumber-1
+        pageSize: pageSize
+        sortBy
+        sortDesc
+      **/
+      this.pagedRequestData.pageNumber = this.pageNumber - 1;
+      this.pagedRequestData.page = this.pagedRequestData.pageNumber;
+      this.pageModel = await definitionsRepository.getPaged(
+        this.pagedRequestData
+      );
+      // this.updatePagesList();
+      this.data = this.pageModel.records;
       this.handleResponse("success");
     } catch (error) {
       this.handleResponse("fail");
     }
   }
 
-  getInitialObject() {
-    return {
-      name: ""
-    };
+  async onPageClick(event) {
+    this.pageNumber = event.detail;
+    this.fetchData();
+    // console.log('number: '+this.pageNumber);
   }
 
   handleRowAction(cmp, event, helper) {
     const action = cmp.detail.action.name;
     const object = cmp.detail.row;
-    this.currentUser = object;
+    this.currentDefinition = object;
 
     switch (action) {
       case "edit":
+        this.isEdit = true;
         this.handleEdit();
         break;
       case "delete":
-        this.deleteId = object.id;
         this.showConfirmation();
-        break;
-      case "change-password":
-        this.changePassword();
         break;
       default:
         console.log("no action");
@@ -102,13 +117,7 @@ export default class Users extends LightningElement {
   }
 
   handleEdit() {
-    this.isEdit = true;
     this.openmodal();
-  }
-
-  changePassword() {
-    // this.changePassword = true;
-    // this.openmodal();
   }
 
   showConfirmation() {
@@ -119,19 +128,17 @@ export default class Users extends LightningElement {
     this.openconfirmation = false;
   }
 
-
   openmodal() {
     this.openmodel = true;
   }
-  
   closeModal() {
-    this.currentUser = this.getInitialObject();
+    this.currentDefinition = {};
     this.openmodel = false;
   }
 
   async handleDelete() {
     try {
-      await usersRepository.deleteUser(this.deleteId);
+      await definitionsRepository.deleteDefinition(this.currentDefinition.id);
       await this.fetchData();
       this.handleResponse("success");
     } catch (error) {
@@ -141,37 +148,37 @@ export default class Users extends LightningElement {
     this.closeConfirmation();
   }
 
-  async updatePassword(event){
-    // const newPassword = event.detail;
-    // console.log('update password');
-    this.changePassword = false;
-  }
-
-  async saveUser(event) {
+  async saveDefinition(event) {
     const newObject = event.detail;
-    // newObject.id = this.currentUser.id;
-    this.currentUser = newObject;
-    let message = "SAVE TENANT";
+
+    console.log("ADD: " + JSON.stringify(newObject));
+
+    let message = "SAVE DEFINITION";
     try {
       if (this.isEdit) {
-        message = "EDIT TENANT";
-        await usersRepository.updateUser(
-          newObject.id,
-          this.currentUser.asJSON()
-        );
+        newObject.id = this.currentDefinition.id;
+        message = "EDIT DEFINITION";
+        await definitionsRepository.updateDefinition(newObject.id, newObject);
       } else {
-        await usersRepository.createUser(this.currentUser.asJSON());
+        await definitionsRepository.createDefinition(newObject);
       }
+      this.currentDefinition = newObject;
       this.handleResponse("success", message);
     } catch (error) {
       console.error(error);
       this.handleResponse("fail", message);
     } finally {
       this.isEdit = false;
-      this.currentUser = this.getInitialObject();
+      this.currentDefinition = null;
       this.fetchData();
       this.closeModal();
     }
+  }
+
+  getInitialObject() {
+    return {
+      name: ""
+    };
   }
 
   /**
